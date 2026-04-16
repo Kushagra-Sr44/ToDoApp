@@ -19,10 +19,6 @@ public class UserController{
     public ResponseEntity<?> getUser(Authentication auth){
         return userService.getUser(auth);
     }
-    @GetMapping("/getalluser")
-    public ResponseEntity<?> getAllUser(Authentication auth){
-        return userService.getAllUser(auth);
-    }
     @PutMapping
     public ResponseEntity<?> changeUserPassword(Authentication auth,@RequestBody User user){
         return userService.changeUserPassword(auth,user);
