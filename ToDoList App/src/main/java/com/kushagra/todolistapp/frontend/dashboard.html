@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Dashboard</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             margin: 0;
@@ -47,12 +47,16 @@
             gap: 15px;
         }
 .grid div button{
-background-color:red;
-   border-radius:2px;
+background-color:black;
+   border-radius:100px;
+   font-size:20px;
    color:white;
    border:0px;
 }
+.grid div button i{
+   color:white;
 
+}
         .card {
             background: white;
             padding: 15px;
@@ -62,9 +66,19 @@ background-color:red;
             transition: 0.3s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
+
+.Completed {
+  background-color: #c8f7c5;
+}
+
+.InCompleted {
+  background-color: #f7c5c5;
+}
+
+.Default {
+  background-color: #f0f0f0;
+}
+
 
         .delete {
             position: absolute;
@@ -102,8 +116,8 @@ background-color:red;
 
         .box {
             background: white;
-            padding: 25px;
-            width: 320px;
+            padding: 40px;
+            width: 350px;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
@@ -183,27 +197,42 @@ background-color:red;
     loadTodos();
 
     function render(todos) {
-        let grid = document.getElementById("grid");
-        grid.innerHTML = "";
+  let grid = document.getElementById("grid");
+  grid.innerHTML = "";
 
-        if (!todos || todos.length === 0) {
-            grid.innerHTML = "<p>No todos yet</p>";
-            return;
-        }
+  if (!todos || todos.length === 0) {
+    grid.innerHTML = "<p>No todos yet</p>";
+    return;
+  }
 
-        todos.forEach(todo => {
-            let div = document.createElement("div");
-            div.className = "card";
+  todos.forEach(todo => {
+    let div = document.createElement("div");
 
-            div.innerHTML = `
-                <button onclick="deleteTodo('${todo.id}')">X</button>
-                <h1>${todo.title}</h1>
-                <p>${todo.content}</p>
-            `;
+    div.className = `card ${todo.status}`;
 
-            grid.appendChild(div);
-        });
-    }
+  div.innerHTML = `
+  <button onclick="statusChange('${todo.id}', 'Completed')">
+    <i class="fa-solid fa-check"></i>
+  </button>
+
+  <button onclick="statusChange('${todo.id}', 'InCompleted')">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <button onclick="statusChange('${todo.id}', 'Default')">
+    <i class="fa-solid fa-rotate-left"></i>
+  </button>
+
+  <button onclick="deleteTodo('${todo.id}')">
+    <i class="fa-solid fa-trash"></i>
+  </button>
+
+  <h1>${todo.title}</h1>
+  <p>${todo.content}</p>
+`;
+    grid.appendChild(div);
+  });
+}
 
     function openModal() {
         document.getElementById("modal").style.display = "flex";
@@ -258,7 +287,26 @@ background-color:red;
         })
         .catch(err => console.log("Error:", err));
     }
-
+         function statusChange(id, newStatus) {
+  fetch(`http://localhost:8080/todo/status/${newStatus}/${id}`, {
+    method: "GET",
+    headers: {
+      "Authorization": "Basic " + localStorage.getItem("authToken")
+    }
+  })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("Request failed");
+      }
+      return res.text(); // no JSON parsing
+    })
+    .then(() => {
+      loadTodos(); // success → refresh UI
+    })
+    .catch(err => {
+      console.log("Error:", err.message);
+    });
+}
     function logout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("username");
