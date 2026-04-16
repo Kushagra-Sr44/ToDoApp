@@ -16,8 +16,9 @@ public class ToDo {
 
     private String title;
     private String content;
-
+    private String status ="Default";
     public String getId() {
         return id != null ? id.toHexString() : null;
     }
+
 }
