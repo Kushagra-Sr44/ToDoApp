@@ -108,9 +108,7 @@
   })
   .then(data => {
     alert("Login successful");
-
-    // OPTIONAL: store user info
-    localStorage.setItem("username", username);
+        localStorage.setItem("username", username);
 localStorage.setItem("authToken", token);
 
     window.location.href = "dashboard.html";
