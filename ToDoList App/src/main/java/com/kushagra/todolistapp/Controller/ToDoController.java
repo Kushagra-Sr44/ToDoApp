@@ -36,5 +36,11 @@ public class ToDoController {
     public ResponseEntity<?> editToDoById(Authentication auth,@PathVariable ObjectId id,@RequestBody ToDo toDo){
         return toDoService.editToDoById(auth,id,toDo);
     }
+    @GetMapping("/status/{status}/{id}")
+    public ResponseEntity<?> editStatus(Authentication auth,@PathVariable String id,@PathVariable  String status){
+        ObjectId oid=new ObjectId(id);
+        return toDoService.editStatus(auth,oid,status);
+    }
+
 
 }
