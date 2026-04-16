@@ -63,5 +63,12 @@ public class ToDoService {
         toDoRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    public  ResponseEntity<?> editStatus(Authentication auth,ObjectId id,String status){
+        ToDo todo=toDoRepository.findByid(id);
+        if(todo==null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        todo.setStatus(status);
+        toDoRepository.save(todo);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
